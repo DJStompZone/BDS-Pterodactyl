@@ -1,0 +1,134 @@
+{
+  "_comment": "Custom BDS Egg by DJ Stomp. If it's worth doing, it's worth overdoing.",
+  "meta": {
+    "version": "PTDL_v2",
+    "update_url": null
+  },
+  "exported_at": "2025-06-18T00:45:20-05:00",
+  "name": "DJ Stomp's BDS",
+  "author": "djstomp@djstomp.net",
+  "description": "Modernized and corrected Bedrock Dedicated Server egg utilizing direct download URLs, smart version resolution, and robust file handling. If it's worth doing... It's worth overdoing. https:\/\/discord.stomp.zone",
+  "features": [
+    "pid_limit"
+  ],
+  "docker_images": {
+    "itzg\/minecraft-bedrock-server:latest": "itzg\/minecraft-bedrock-server:latest"
+  },
+  "file_denylist": [],
+  "startup": "bash startup.sh",
+  "config": {
+    "files": "{\r\n    \"server.properties\": {\r\n        \"parser\": \"properties\",\r\n        \"find\": {\r\n            \"server-port\": \"{{server.build.default.port}}\",\r\n            \"server-name\": \"{{server.build.env.SERVERNAME}}\",\r\n            \"gamemode\": \"{{server.build.env.GAMEMODE}}\",\r\n            \"difficulty\": \"{{server.build.env.DIFFICULTY}}\",\r\n            \"allow-cheats\": \"{{server.build.env.CHEATS}}\"\r\n        }\r\n    }\r\n}",
+    "startup": "{\r\n    \"done\": \"Server started\"\r\n}",
+    "logs": "{}",
+    "stop": "stop"
+},
+  "scripts": {
+    "installation": {
+      "script": "#!\/bin\/bash\n\n# You may inject your full startup.sh here, but the preferred method is to mount it via custom yolk or place it in the server files prior to startup. Don't come crying to me if you break it.\necho \"Using DJ Stomp's custom Bedrock install logic.\"\nchmod +x startup.sh\n.\/startup.sh",
+      "container": "debian:bookworm-slim",
+      "entrypoint": "bash"
+    }
+  },
+  "variables": [
+    {
+      "name": "Bedrock Version",
+      "description": "Version of Bedrock to install. Use LATEST, PREVIEW, or a specific version like 1.20.90.04.",
+      "env_variable": "VERSION",
+      "default_value": "LATEST",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:20",
+      "field_type": "text"
+    },
+    {
+      "name": "EULA Agreement",
+      "description": "You must agree to Mojang's EULA by setting this to TRUE. By installing this egg, you agree to the EULA: https:\/\/www.minecraft.net\/en-us\/eula",
+      "env_variable": "EULA",
+      "default_value": "TRUE",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|in:TRUE,FALSE",
+      "field_type": "text"
+    },
+    {
+      "name": "Direct Download URL",
+      "description": "Optional. Provide a direct Bedrock server zip URL to skip version lookup.",
+      "env_variable": "DIRECT_DOWNLOAD_URL",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string",
+      "field_type": "text"
+    },
+    {
+      "name": "Operators (OPS)",
+      "description": "Comma-separated list of XUIDs to grant operator permission.",
+      "env_variable": "OPS",
+      "default_value": "2533274884028261,2535469284293144",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string",
+      "field_type": "text"
+    },
+    {
+      "name": "Members",
+      "description": "Comma-separated list of XUIDs to grant member permission.",
+      "env_variable": "MEMBERS",
+      "default_value": "2535435768133192",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string",
+      "field_type": "text"
+    },
+    {
+      "name": "Visitors",
+      "description": "Comma-separated list of XUIDs to grant visitor permission.",
+      "env_variable": "VISITORS",
+      "default_value": "2535453759792258",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string",
+      "field_type": "text"
+    },
+    {
+      "name": "Allow List Users",
+      "description": "Comma-separated list of IGN:XUID or just IGN for allowlist.json generation.",
+      "env_variable": "ALLOW_LIST_USERS",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string",
+      "field_type": "text"
+    },
+    {
+      "name": "Enable SSH Console",
+      "description": "Enable mc-server-runner's remote console interface. TRUE or FALSE.",
+      "env_variable": "ENABLE_SSH",
+      "default_value": "FALSE",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|in:TRUE,FALSE",
+      "field_type": "text"
+    },
+    {
+      "name": "Variables JSON",
+      "description": "Optional: JSON or key=value,key=value list of server variables.",
+      "env_variable": "VARIABLES",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string",
+      "field_type": "text"
+    },
+    {
+      "name": "ld lib path",
+      "description": "Tells the dynamic link loader where to search for the dynamic shared libraries. This is often required for custom builds or specific library versions. If you're not sure, leave it as is.",
+      "env_variable": "LD_LIBRARY_PATH",
+      "default_value": ".",
+      "user_viewable": false,
+      "user_editable": false,
+      "rules": "required|string|max:50",
+      "field_type": "text"
+   }
+  ]
+}
